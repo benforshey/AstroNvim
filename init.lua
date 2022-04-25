@@ -6,11 +6,11 @@ local config = {
     lualine = true,
     gitsigns = true,
     colorizer = true,
-    toggle_term = true,
+    toggle_term = false,
     comment = true,
     symbols_outline = true,
     indent_blankline = true,
-    dashboard = true,
+    dashboard = false,
     which_key = true,
     neoscroll = false,
     ts_rainbow = true,
@@ -27,8 +27,9 @@ local config = {
   plugins = {
     -- Add plugins, the packer syntax without the "use"
     init = {
+      { "christoomey/vim-tmux-navigator" },
       { "morhetz/gruvbox" },
-      { "prettier/vim-prettier", run = "npm install" }, 
+      { "tpope/vim-surround" },
     },
     ["neo-tree"] = {
       window = {
@@ -58,11 +59,6 @@ local config = {
   },
 
   -- CMP Source Priorities
-  -- modify here the priorities of default cmp sources
-  -- higher value == higher priority
-  -- The value can also be set to a boolean for disabling default sources:
-  -- false == disabled
-  -- true == 1000
   cmp = {
     source_priority = {
       nvim_lsp = 1000,
@@ -74,33 +70,11 @@ local config = {
 
   -- Extend LSP configuration
   lsp = {
-    -- add to the server on_attach function
-    -- on_attach = function(client, bufnr)
-    -- end,
-
-    -- override the lsp installer server-registration function
-    -- server_registration = function(server, opts)
-    --   server:setup(opts)
-    -- end
-
     -- Add overrides for LSP server settings, the keys are the name of the server
-    ["server-settings"] = {
-      -- example for addings schemas to yamlls
-      -- yamlls = {
-      --   settings = {
-      --     yaml = {
-      --       schemas = {
-      --         ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
-      --         ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-      --         ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
-      --       },
-      --     },
-      --   },
-      -- },
-    },
+    ["server-settings"] = {},
   },
 
-  -- Diagnostics configuration (for vim.diagnostics.config({}))
+  -- Diagnostics configuration --[[ (for vim.diagnostics.config({})) ]]
   diagnostics = {
     virtual_text = true,
     underline = true,
@@ -127,9 +101,9 @@ local config = {
       debug = false,
       sources = {
         -- Set a formatter
-        formatting.rufo,
+        formatting.prettier,
         -- Set a linter
-        diagnostics.rubocop,
+        diagnostics.tsc,
       },
       -- NOTE: You can remove this on attach function to disable format on save
       on_attach = function(client)
@@ -158,7 +132,7 @@ local config = {
     map("n", "<C-s>", ":w!<CR>")
 
     --Set folding options
-    set.foldmethod = 'syntax'
+    set.foldmethod = 'indent'
     set.foldlevelstart = 99
 
     -- Set autocommands
@@ -179,26 +153,19 @@ local config = {
     ]]
 
     -- Set look and feel
-    vim.o.termguicolors = true
     set.background = 'dark'
     vim.cmd [[
       syntax enable
       colorscheme gruvbox
     ]]
+    set.termguicolors = true
 
+    -- Set word wrapping
+    set.wrap = true 
+    set.linebreak = true
 
-    -- Set up custom filetypes
-    -- vim.filetype.add {
-    --   extension = {
-    --     foo = "fooscript",
-    --   },
-    --   filename = {
-    --     ["Foofile"] = "fooscript",
-    --   },
-    --   pattern = {
-    --     ["~/%.config/foo/.*"] = "fooscript",
-    --   },
-    -- }
+    vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
+    vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
   end,
 }
 

@@ -1,4 +1,6 @@
 local config = {
+  options = {},
+
   -- Disable default plugins
   enabled = {
     bufferline = true,
@@ -29,7 +31,16 @@ local config = {
     init = {
       { "christoomey/vim-tmux-navigator" },
       { "morhetz/gruvbox" },
+      { "tpope/vim-fugitive" },
       { "tpope/vim-surround" },
+    },
+    bufferline = {
+      options = {
+        separator_style = 'thick',
+        show_buffer_close_icons = false,
+        show_close_icon = false,
+        sort_by = 'directory',
+      },
     },
     ["neo-tree"] = {
       window = {
@@ -39,7 +50,6 @@ local config = {
     packer = {
       compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
     },
-    -- All other entries override the setup() call for default plugins
     treesitter = {
       ensure_installed = { "lua" },
     },
